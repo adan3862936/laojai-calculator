@@ -88,6 +88,18 @@
 
   @page{size:A4;margin:11mm 10mm 12mm}
   @media print{html,body{background:#fff}.sheet{width:auto;margin:0;padding:0}}
+  /* ===== 互動填寫（可勾選 + 可輸入），2026 新增 ===== */
+  .cb{cursor:pointer}
+  .opt{cursor:pointer;user-select:none}
+  .fund .need{cursor:pointer}
+  .editable{cursor:text;background:#fffdf5;border-radius:3px;transition:background .12s}
+  .editable:hover{background:#fbf3e2}
+  .editable:focus{outline:none;background:#fff;box-shadow:inset 0 0 0 2px var(--accent)}
+  .info td.editable{min-height:1.5em}
+  .fund .est.editable{min-height:1.5em}
+  .concl .blank.editable{min-height:42px}
+  .editable:not(:focus):empty:before{content:attr(data-ph);color:#c4b290;font-weight:400;font-size:11.5px}
+  @media print{ .editable{background:transparent !important;box-shadow:none !important} .editable:empty:before{content:'' !important} }
 </style>
 </head>
 <body>
@@ -223,5 +235,40 @@
   </footer>
 
 </div>
+<script>
+/* ===== 健檢表互動：可勾選 + 可輸入 ===== */
+(function(){
+  function toggle(cb){
+    var res=cb.closest('.res');
+    if(res && !cb.classList.contains('on')){
+      res.querySelectorAll('.cb.on').forEach(function(x){ x.classList.remove('on'); });
+    }
+    cb.classList.toggle('on');
+  }
+  document.querySelectorAll('.opt').forEach(function(opt){
+    var cb=opt.querySelector('.cb'); if(!cb) return;
+    opt.addEventListener('click', function(){ toggle(cb); });
+  });
+  document.querySelectorAll('.fund .need').forEach(function(td){
+    var cb=td.querySelector('.cb'); if(!cb) return;
+    td.addEventListener('click', function(){ toggle(cb); });
+  });
+  document.querySelectorAll('.cb').forEach(function(cb){
+    if(cb.closest('.opt')||cb.closest('.need')) return;
+    cb.addEventListener('click', function(){ toggle(cb); });
+  });
+  var fields=[];
+  document.querySelectorAll('.info td').forEach(function(td){ if(!td.querySelector('.cb')) fields.push([td,'點此填寫']); });
+  document.querySelectorAll('.fund .est').forEach(function(td){ fields.push([td,'金額']); });
+  document.querySelectorAll('.concl .blank').forEach(function(el){ fields.push([el,'點此輸入備註…']); });
+  fields.forEach(function(p){
+    var el=p[0];
+    el.setAttribute('contenteditable','true');
+    el.setAttribute('spellcheck','false');
+    el.setAttribute('data-ph',p[1]);
+    el.classList.add('editable');
+  });
+})();
+</script>
 </body>
 </html>
