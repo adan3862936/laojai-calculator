@@ -175,12 +175,12 @@
 <div id="app" style="display:none">
 
 <nav class="tabbar"><div class="tabbar-inner">
-  <button class="tabbtn active" data-tab="calc">💰 補助試算</button>
-  <button class="tabbtn" data-tab="apartment">🏢 公寓大廈健檢表</button>
+  <button class="tabbtn active" data-tab="apartment">🏢 公寓大廈健檢表</button>
   <button class="tabbtn" data-tab="townhouse">🏠 獨棟透天健檢表</button>
+  <button class="tabbtn" data-tab="calc">💰 補助試算</button>
 </div></nav>
 
-<section class="tabpanel active" id="panel-calc">
+<section class="tabpanel" id="panel-calc">
 
 <div class="panel-toolbar"><button class="exp-btn no-print" data-print="calc">🖨 列印 / 匯出補助試算</button></div>
 
@@ -274,7 +274,7 @@
 
 </section><!-- /#panel-calc -->
 
-<section class="tabpanel" id="panel-apartment">
+<section class="tabpanel active" id="panel-apartment">
   <div class="panel-toolbar"><button class="exp-btn no-print" data-print="apartment">🖨 列印 / 匯出此健檢表</button></div>
   <iframe class="form-frame" data-src="健檢表-公寓大廈版.html" title="公寓大廈版健檢表"></iframe>
 </section>
@@ -553,6 +553,29 @@
   document.querySelectorAll('.exp-btn').forEach(function(b){
     b.addEventListener('click', function(){ exportTab(b.getAttribute('data-print')); });
   });
+
+  /* ===== 預設分頁（公寓大廈健檢表）的 iframe 載入與高度量測 =====
+     #app 在登入前為隱藏狀態，隱藏時無法正確量測 iframe 高度，
+     因此在「已顯示」時才量測，並監看登入後由隱藏轉為顯示的時機。 */
+  function loadActiveFrame(){
+    var p=document.querySelector('.tabpanel.active');
+    var fr=p ? p.querySelector('iframe[data-src]') : null;
+    if(!fr) return;
+    if(!fr.getAttribute('src')){
+      fr.addEventListener('load', function(){ sizeFrame(fr); });
+      fr.setAttribute('src', fr.getAttribute('data-src'));
+    } else {
+      sizeFrame(fr);
+    }
+  }
+  var appEl=document.getElementById('app');
+  if(appEl && appEl.style.display!=='none'){ loadActiveFrame(); }
+  if(appEl){
+    var mo=new MutationObserver(function(){
+      if(appEl.style.display!=='none'){ loadActiveFrame(); }
+    });
+    mo.observe(appEl, {attributes:true, attributeFilter:['style']});
+  }
 })();
 </script>
 </body>
