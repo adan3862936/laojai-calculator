@@ -144,6 +144,8 @@
   .exp-btn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:9px 17px;font-size:13px;font-weight:800;cursor:pointer;font-family:var(--font);box-shadow:0 2px 7px rgba(176,122,50,.32);transition:.15s}
   .exp-btn:hover{background:#9a6a2a}
   .exp-btn:active{transform:translateY(1px)}
+  .tier-hint{font-size:11.5px;color:var(--brand2);background:var(--soft);border-radius:6px;padding:7px 11px;margin-top:9px;line-height:1.65}
+  .tier-hint b{color:var(--brand)}
   @media print{
     .tabbar,#logoutBtn,.panel-toolbar,.no-print{display:none !important}
     body{background:#fff}
@@ -326,16 +328,18 @@
     cfg.works.forEach(function(w){
       var div = document.createElement("div");
       div.className = "item"; div.dataset.id = w.id;
-      var capTxt, tierSel = "";
+      var capTxt, tierSel = "", tierHint = "";
       if(w.tiered){
         capTxt = '<span class="cap" data-cap>100–300 <small>萬</small></span>';
-        tierSel = '<label>樓層</label><select class="tier">'+w.tiered.map(function(t,i){return '<option value="'+t.v+'">'+t.t+'（'+t.v+'萬）</option>';}).join("")+'</select>';
+        tierSel = '<label>整棟樓層數</label><select class="tier">'+w.tiered.map(function(t,i){return '<option value="'+t.v+'">'+t.t+'（'+t.v+'萬）</option>';}).join("")+'</select>';
+        tierHint = '<div class="tier-hint">＊「整棟樓層數」是用來對應立面補助上限級距（樓層越高、上限越高）。立面修繕以<b>整棟外牆</b>為單位申請，不是只做某一層。</div>';
       } else {
         capTxt = '<span class="cap">'+w.cap+' <small>萬</small></span>';
       }
       div.innerHTML =
         '<div class="row1"><input type="checkbox" class="wk"><span class="nm">'+w.nm+(w.sub?'<span class="sub">'+w.sub+'</span>':'')+'</span>'+capTxt+'</div>'+
-        '<div class="row2">'+tierSel+'<label>預估工程費</label><input type="number" class="cost" min="0" step="1" placeholder="萬（選填）"><span class="real"></span></div>';
+        '<div class="row2">'+tierSel+'<label>預估工程費</label><input type="number" class="cost" min="0" step="1" placeholder="萬（選填）"><span class="real"></span></div>'+
+        tierHint;
       worksBox.appendChild(div);
     });
     bind();
