@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>老屋延壽補助試算 · 最高可申請金額計算器</title>
+<link rel="icon" href="data:,">
+<style>
+  :root{
+    --ink:#33271a; --brand:#46301e; --brand2:#6b4a30; --accent:#b07a32; --accent2:#caa063;
+    --bg:#efe6d4; --card:#fffdf8; --line:#dccdb2; --soft:#f4ecda; --zebra:#f8f2e6;
+    --ok:#3f7d52; --ok-bg:#e7f0e6; --warn:#bb5a2a; --lock:#b9ab90;
+    --font:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+    --serif:Georgia,"Times New Roman",serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:var(--bg);font-family:var(--font);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+  body{padding:0 0 40px}
+  a{color:var(--brand)}
+
+  /* 頁首 */
+  header{background:linear-gradient(120deg,#46301e 0%,#6b4a30 100%);color:#fff;padding:30px 24px 26px}
+  .hwrap{max-width:1080px;margin:0 auto}
+  header .tag{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+              border-radius:20px;padding:4px 14px;font-size:13px;font-weight:700;letter-spacing:.06em;margin-bottom:10px}
+  header h1{font-size:28px;font-weight:900;letter-spacing:.01em}
+  header p{font-size:14px;color:#e9ddc8;margin-top:6px}
+  header .meta{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+  header .chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;
+               padding:5px 12px;font-size:12.5px;font-weight:600}
+  header .chip b{color:var(--accent2)}
+
+  /* 版面 */
+  .layout{max-width:1080px;margin:22px auto 0;padding:0 24px;display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+  @media(max-width:860px){.layout{grid-template-columns:1fr}}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:18px;box-shadow:0 6px 20px rgba(70,48,30,.06)}
+  .step-h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .step-n{width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;font-family:var(--serif);
+          font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+  .step-t{font-size:17px;font-weight:800;color:var(--brand)}
+  .step-hint{margin-left:auto;font-size:12px;color:var(--brand2);font-weight:600}
+
+  /* toggle 類型 */
+  .seg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .seg label{display:block;cursor:pointer}
+  .seg input{position:absolute;opacity:0}
+  .seg .box{border:2px solid var(--line);border-radius:10px;padding:14px;text-align:center;transition:.15s;background:var(--soft)}
+  .seg .box .ic{font-size:24px}
+  .seg .box .nm{font-weight:800;font-size:15px;margin-top:4px;color:var(--brand)}
+  .seg .box .sb{font-size:11.5px;color:var(--brand2);margin-top:2px}
+  .seg input:checked + .box{border-color:var(--accent);background:#fff;box-shadow:0 4px 14px rgba(176,122,50,.22)}
+
+  /* radio 結構評估 */
+  .radios{display:flex;flex-direction:column;gap:8px}
+  .radio{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:9px;padding:10px 14px;cursor:pointer;transition:.15s}
+  .radio:hover{border-color:var(--accent2)}
+  .radio input{width:17px;height:17px;accent-color:var(--brand)}
+  .radio .rt{font-weight:700}
+  .radio .rc{margin-left:auto;font-family:var(--serif);font-weight:700;color:var(--accent);font-size:15px}
+  .radio.sel{border-color:var(--accent);background:#fff;box-shadow:0 3px 10px rgba(176,122,50,.16)}
+
+  /* 項目卡 */
+  .items{display:flex;flex-direction:column;gap:9px}
+  .item{border:1px solid var(--line);border-radius:10px;padding:11px 14px;transition:.15s;background:var(--card)}
+  .item.on{border-color:var(--accent);background:#fffaf1;box-shadow:0 3px 10px rgba(176,122,50,.14)}
+  .item .row1{display:flex;align-items:center;gap:11px}
+  .item input[type=checkbox]{width:18px;height:18px;accent-color:var(--brand);flex:none}
+  .item .nm{font-weight:700;flex:1}
+  .item .nm .sub{font-weight:400;font-size:11px;color:var(--brand2);margin-left:4px}
+  .item .cap{font-family:var(--serif);font-weight:700;color:var(--accent);white-space:nowrap;font-size:15px}
+  .item .cap small{font-family:var(--font);font-size:11px;color:var(--brand2);font-weight:600}
+  .item .row2{display:none;margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);align-items:center;gap:8px;flex-wrap:wrap}
+  .item.on .row2{display:flex}
+  .item .row2 label{font-size:12px;color:var(--brand2);font-weight:600}
+  .item .row2 input[type=number]{width:110px;border:1px solid var(--line);border-radius:7px;padding:6px 9px;font-size:13px;font-family:var(--font)}
+  .item .row2 select{border:1px solid var(--line);border-radius:7px;padding:6px 9px;font-size:13px;font-family:var(--font)}
+  .item .real{font-size:12px;color:var(--ok);font-weight:700;margin-left:auto}
+
+  /* 室內 */
+  .lockwrap{position:relative}
+  .lockmsg{display:none;background:#f3ecdb;border:1px dashed var(--lock);border-radius:10px;padding:14px;color:#8a6f48;font-size:13px;font-weight:600;text-align:center}
+  .locked .lockmsg{display:block}
+  .locked .indoor-body{display:none}
+  .indoor-body{display:flex;flex-direction:column;gap:12px}
+  .hh{display:grid;grid-template-columns:1fr 130px;gap:10px;align-items:center}
+  .hh .lbl{font-weight:700}
+  .hh .lbl small{display:block;font-size:11.5px;color:var(--brand2);font-weight:500}
+  .hh input{border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:14px;font-family:var(--font);text-align:center}
+
+  /* 結果面板 */
+  .result{position:sticky;top:18px}
+  .result .total-card{background:linear-gradient(135deg,#46301e,#6b4a30);color:#fff;border-radius:14px;padding:22px;box-shadow:0 10px 28px rgba(70,48,30,.22)}
+  .result .tlabel{font-size:13px;color:#e7d8be;font-weight:600;letter-spacing:.04em}
+  .result .tnum{font-family:var(--serif);font-weight:800;font-size:46px;line-height:1.05;margin:6px 0 2px;color:#fff}
+  .result .tnum small{font-size:20px;color:var(--accent2)}
+  .result .tunit{font-size:13px;color:#cdb893}
+  .result .real-line{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.2);font-size:13px;color:#e7d8be}
+  .result .real-line b{color:#fff;font-size:18px;font-family:var(--serif)}
+  .breakdown{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:14px}
+  .breakdown h3{font-size:14px;color:var(--brand);font-weight:800;margin-bottom:10px;letter-spacing:.03em}
+  .bd-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px dotted var(--line);color:#5a4732}
+  .bd-row:last-child{border-bottom:0}
+  .bd-row .v{font-family:var(--serif);font-weight:700;color:var(--brand)}
+  .bd-empty{font-size:13px;color:var(--lock);text-align:center;padding:8px 0}
+
+  .note{max-width:1080px;margin:8px auto 0;padding:0 24px}
+  .note .nb{background:var(--soft);border:1px dashed var(--accent);border-radius:10px;padding:12px 16px;font-size:12px;color:#6a5234;line-height:1.7}
+  .note .nb b{color:var(--brand)}
+  footer{max-width:1080px;margin:18px auto 0;padding:14px 24px 0;border-top:1px solid var(--line);
+         font-size:11.5px;color:#8a7558;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  footer .brand{font-weight:700;color:var(--brand2)}
+
+  /* ===== 登入頁 ===== */
+  #authGate{position:fixed;inset:0;z-index:1000;background:linear-gradient(135deg,#46301e,#6b4a30);display:flex;align-items:center;justify-content:center;padding:24px}
+  .auth-card{background:var(--card);border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.32);padding:34px 30px;width:100%;max-width:380px;text-align:center}
+  .auth-card .logo{font-size:32px}
+  .auth-card h2{font-size:21px;color:var(--brand);font-weight:900;margin:8px 0 4px}
+  .auth-card .sub{font-size:13px;color:var(--brand2);margin-bottom:22px}
+  .auth-field{text-align:left;margin-bottom:14px}
+  .auth-field label{display:block;font-size:12.5px;font-weight:700;color:var(--brand2);margin-bottom:5px}
+  .auth-field input{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:11px 13px;font-size:14px;font-family:var(--font);background:#fff}
+  .auth-field input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px rgba(176,122,50,.15)}
+  .auth-btn{width:100%;background:var(--brand);color:#fff;border:0;border-radius:9px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;font-family:var(--font);transition:.15s}
+  .auth-btn:hover{background:#5a3e28}
+  .auth-btn:disabled{background:var(--lock);cursor:not-allowed}
+  .auth-err{color:var(--warn);font-size:12.5px;margin-top:12px;min-height:16px;font-weight:600}
+  .auth-tip{margin-top:16px;font-size:11px;color:var(--brand2);line-height:1.6;background:var(--soft);border-radius:8px;padding:10px 12px;text-align:left}
+  .auth-setup{background:#fbeee0;border:1px dashed var(--warn);border-radius:8px;padding:12px;font-size:12px;color:#8a4a22;text-align:left;margin-bottom:16px;line-height:1.6}
+  .auth-setup b{color:var(--warn)}
+  #logoutBtn{position:fixed;top:8px;right:18px;z-index:60;background:var(--brand);border:0;color:#fff;border-radius:8px;padding:7px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:var(--font);box-shadow:0 2px 6px rgba(70,48,30,.25)}
+  #logoutBtn:hover{background:#5a3e28}
+  /* ===== 分頁標籤 ===== */
+  .tabbar{position:sticky;top:0;z-index:40;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(70,48,30,.06)}
+  .tabbar-inner{max-width:1080px;margin:0 auto;padding:0 96px 0 24px;display:flex;gap:4px;overflow-x:auto}
+  .tabbtn{flex:0 0 auto;background:none;border:0;border-bottom:3px solid transparent;color:var(--brand2);font-family:var(--font);font-size:14.5px;font-weight:700;padding:14px 16px 11px;cursor:pointer;white-space:nowrap;transition:.15s}
+  .tabbtn:hover{color:var(--brand);background:var(--soft)}
+  .tabbtn.active{color:var(--brand);border-bottom-color:var(--accent)}
+  .tabpanel{display:none}
+  .tabpanel.active{display:block}
+  .form-frame{display:block;width:100%;border:0;background:#fff;min-height:88vh}
+  /* ===== 列印 / 匯出 按鈕 ===== */
+  .panel-toolbar{max-width:1080px;margin:0 auto;padding:14px 24px 0;display:flex;justify-content:flex-end}
+  .exp-btn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:9px 17px;font-size:13px;font-weight:800;cursor:pointer;font-family:var(--font);box-shadow:0 2px 7px rgba(176,122,50,.32);transition:.15s}
+  .exp-btn:hover{background:#9a6a2a}
+  .exp-btn:active{transform:translateY(1px)}
+  @media print{
+    .tabbar,#logoutBtn,.panel-toolbar,.no-print{display:none !important}
+    body{background:#fff}
+    .layout{grid-template-columns:1fr !important}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+<!-- ===== 登入頁 ===== -->
+<div id="authGate">
+  <div class="auth-card">
+    <div class="logo">🏠</div>
+    <h2>老屋延壽補助試算</h2>
+    <div class="sub">請以授權帳號登入後使用</div>
+    <div class="auth-setup" id="setupMsg" style="display:none">⚠️ <b>尚未完成 Firebase 設定</b>：請開啟本檔，將程式碼底部 <code>firebaseConfig</code> 換成你的專案設定值，並於 Firebase 啟用「電子郵件/密碼」登入後即可使用。</div>
+    <div class="auth-field"><label>電子郵件</label><input type="email" id="authEmail" placeholder="you@example.com" autocomplete="username"></div>
+    <div class="auth-field"><label>密碼</label><input type="password" id="authPw" placeholder="請輸入密碼" autocomplete="current-password"></div>
+    <button class="auth-btn" id="loginBtn">登　入</button>
+    <div class="auth-err" id="authErr"></div>
+    <div class="auth-tip">僅限授權帳號使用。如需開通帳號，請洽管理者。</div>
+  </div>
+</div>
+<button id="logoutBtn" style="display:none">登出</button>
+
+<div id="app" style="display:none">
+
+<nav class="tabbar"><div class="tabbar-inner">
+  <button class="tabbtn active" data-tab="calc">💰 補助試算</button>
+  <button class="tabbtn" data-tab="apartment">🏢 公寓大廈健檢表</button>
+  <button class="tabbtn" data-tab="townhouse">🏠 獨棟透天健檢表</button>
+</div></nav>
+
+<section class="tabpanel active" id="panel-calc">
+
+<div class="panel-toolbar"><button class="exp-btn no-print" data-print="calc">🖨 列印 / 匯出補助試算</button></div>
+
+<header>
+  <div class="hwrap">
+    <span class="tag">老宅延壽機能復新計畫 · 2026</span>
+    <h1>老屋延壽補助　最高可申請金額試算</h1>
+    <p>勾選您想做的修繕項目，立即估算「最高可申請補助上限」；填入預估工程費可再估實際補助。</p>
+    <div class="meta">
+      <span class="chip">補助比例 <b>最高 65%</b></span>
+      <span class="chip">受理至 <b>2027 / 12 / 31</b></span>
+      <span class="chip"><b>名額有限</b>・先到先審</span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- 左：輸入 -->
+  <div class="inputs">
+
+    <!-- Step 1 類型 -->
+    <div class="panel">
+      <div class="step-h"><span class="step-n">1</span><span class="step-t">建物類型</span></div>
+      <div class="seg">
+        <label><input type="radio" name="btype" value="apartment" checked><div class="box"><div class="ic">🏢</div><div class="nm">4–6 樓公寓</div><div class="sb">集合住宅・共用部分</div></div></label>
+        <label><input type="radio" name="btype" value="townhouse"><div class="box"><div class="ic">🏠</div><div class="nm">6 樓以下透天</div><div class="sb">全棟住宅・自然人</div></div></label>
+      </div>
+    </div>
+
+    <!-- Step 2 結構評估 -->
+    <div class="panel">
+      <div class="step-h"><span class="step-n">2</span><span class="step-t">結構安全性能評估</span><span class="step-hint">必備門檻・二擇一</span></div>
+      <div class="radios" id="assess">
+        <label class="radio"><input type="radio" name="assess" value="0" checked><span class="rt">尚未／不納入試算</span><span class="rc">—</span></label>
+        <label class="radio"><input type="radio" name="assess" value="1.5"><span class="rt">耐震初步評估</span><span class="rc">1.5 萬</span></label>
+        <label class="radio"><input type="radio" name="assess" value="40"><span class="rt">耐震詳細評估</span><span class="rc">40 萬</span></label>
+      </div>
+    </div>
+
+    <!-- Step 3 修繕項目 -->
+    <div class="panel">
+      <div class="step-h"><span class="step-n">3</span><span class="step-t" id="step3t">公共空間修繕（共用部分）</span><span class="step-hint" id="step3h">公寓須選 ≧ 3 項</span></div>
+      <div class="items" id="works"></div>
+    </div>
+
+    <!-- Step 4 室內 -->
+    <div class="panel">
+      <div class="step-h"><span class="step-n">4</span><span class="step-t">私人室內修繕（專有部分）</span><span class="step-hint">每戶上限</span></div>
+      <div class="lockwrap" id="indoorWrap">
+        <div class="lockmsg" id="lockmsg">🔒 請先在上方完成解鎖條件，才能加選室內修繕</div>
+        <div class="indoor-body">
+          <div class="hh">
+            <div class="lbl">一般住戶<small>每戶上限 20 萬</small></div>
+            <input type="number" id="normalHouse" min="0" step="1" value="0" placeholder="戶數">
+          </div>
+          <div class="hh">
+            <div class="lbl">高齡／弱勢住戶<small>65 歲長者・低收中低收・長照 2 級｜每戶上限 30 萬</small></div>
+            <input type="number" id="weakHouse" min="0" step="1" value="0" placeholder="戶數">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 右：結果 -->
+  <div class="result">
+    <div class="total-card">
+      <div class="tlabel">最高可申請補助上限</div>
+      <div class="tnum" id="totalNum">0 <small>萬</small></div>
+      <div class="tunit" id="totalNote">勾選項目後自動試算</div>
+      <div class="real-line" id="realLine" style="display:none">填入工程費後・預估實際補助約 <b id="realNum">0</b> 萬</div>
+    </div>
+    <div class="breakdown">
+      <h3>試算明細</h3>
+      <div id="bdList"><div class="bd-empty">尚未選擇任何項目</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  <div class="nb">
+    <b>說明：</b>本試算為「補助上限」概估，協助您快速了解最高可申請金額。實際補助為各項<b>工程費的 65%</b> 且不超過各項上限（實支實付核銷）；公寓須先選 <b>≧ 3 項</b>共用、透天須先選 <b>≧ 1 項</b>室外，才能加選室內專有。立面修繕補助單價以 <b>3,500 元/m²</b> 為限。實際受理條件、額度與名額，仍以<b>地方政府公告</b>及正式申請文件為準。
+  </div>
+</div>
+
+<footer>
+  <span>老宅延壽機能復新計畫 · 補助試算計算器</span>
+  <span class="brand">中央諮詢專線 02-7701-9919　·　內政部都市更新入口網「老宅延壽專區」</span>
+</footer>
+
+</section><!-- /#panel-calc -->
+
+<section class="tabpanel" id="panel-apartment">
+  <div class="panel-toolbar"><button class="exp-btn no-print" data-print="apartment">🖨 列印 / 匯出此健檢表</button></div>
+  <iframe class="form-frame" data-src="健檢表-公寓大廈版.html" title="公寓大廈版健檢表"></iframe>
+</section>
+
+<section class="tabpanel" id="panel-townhouse">
+  <div class="panel-toolbar"><button class="exp-btn no-print" data-print="townhouse">🖨 列印 / 匯出此健檢表</button></div>
+  <iframe class="form-frame" data-src="健檢表-獨棟透天版.html" title="獨棟透天版健檢表"></iframe>
+</section>
+
+</div><!-- /#app -->
+
+<script>
+(function(){
+  // ===== 補助規則資料（單位：萬元） =====
+  var DATA = {
+    apartment: {
+      title:"公共空間修繕（共用部分）", hint:"公寓須選 ≧ 3 項", unlock:3, advisory:true,
+      works:[
+        {id:"elevator", nm:"增設昇降設備（電梯）", cap:400, adv:5},
+        {id:"facade", nm:"建築物立面修繕（拉皮）", sub:"單價 ≤3,500/m²", cap:300, adv:5},
+        {id:"pipe", nm:"公共管線修繕更新", cap:50},
+        {id:"roof", nm:"屋頂防水及隔熱", cap:50},
+        {id:"stair", nm:"樓梯間修繕", cap:40},
+        {id:"demo", nm:"老舊招牌・違規物・違建拆除", cap:40},
+        {id:"ac", nm:"外掛空調及管線安全改善", cap:40},
+        {id:"barrier", nm:"增設或改善無障礙設施", cap:40}
+      ]
+    },
+    townhouse: {
+      title:"室外修繕", hint:"透天須選 ≧ 1 項", unlock:1, advisory:false,
+      works:[
+        {id:"facade", nm:"建築物立面修繕", tiered:[{t:"1–2 樓",v:100},{t:"3–4 樓",v:200},{t:"5–6 樓",v:300}]},
+        {id:"roof", nm:"屋頂防水及隔熱", cap:20},
+        {id:"ac", nm:"外掛空調及外部管線安全改善", cap:5},
+        {id:"barrier", nm:"增設或改善室外無障礙設施", cap:5}
+      ]
+    }
+  };
+  var RATE = 0.65;
+
+  var worksBox = document.getElementById("works");
+  function btype(){ return document.querySelector('input[name=btype]:checked').value; }
+
+  function renderWorks(){
+    var cfg = DATA[btype()];
+    document.getElementById("step3t").textContent = cfg.title;
+    document.getElementById("step3h").textContent = cfg.hint;
+    worksBox.innerHTML = "";
+    cfg.works.forEach(function(w){
+      var div = document.createElement("div");
+      div.className = "item"; div.dataset.id = w.id;
+      var capTxt, tierSel = "";
+      if(w.tiered){
+        capTxt = '<span class="cap" data-cap>100–300 <small>萬</small></span>';
+        tierSel = '<label>樓層</label><select class="tier">'+w.tiered.map(function(t,i){return '<option value="'+t.v+'">'+t.t+'（'+t.v+'萬）</option>';}).join("")+'</select>';
+      } else {
+        capTxt = '<span class="cap">'+w.cap+' <small>萬</small></span>';
+      }
+      div.innerHTML =
+        '<div class="row1"><input type="checkbox" class="wk"><span class="nm">'+w.nm+(w.sub?'<span class="sub">'+w.sub+'</span>':'')+'</span>'+capTxt+'</div>'+
+        '<div class="row2">'+tierSel+'<label>預估工程費</label><input type="number" class="cost" min="0" step="1" placeholder="萬（選填）"><span class="real"></span></div>';
+      worksBox.appendChild(div);
+    });
+    bind();
+    recalc();
+  }
+
+  function bind(){
+    worksBox.querySelectorAll(".item").forEach(function(it){
+      var cb = it.querySelector(".wk");
+      cb.addEventListener("change", function(){ it.classList.toggle("on", cb.checked); recalc(); });
+      var cost = it.querySelector(".cost"); if(cost) cost.addEventListener("input", recalc);
+      var tier = it.querySelector(".tier"); if(tier) tier.addEventListener("change", recalc);
+    });
+  }
+
+  function fmt(n){ return n.toLocaleString("zh-TW"); }
+
+  function recalc(){
+    var cfg = DATA[btype()];
+    var bd = [];           // 明細
+    var capTotal = 0;      // 上限加總（最高可申請）
+    var realTotal = 0;     // 實際估算
+    var anyCost = false;
+    var selCount = 0;
+
+    // 結構評估
+    var assess = parseFloat(document.querySelector('input[name=assess]:checked').value) || 0;
+    document.querySelectorAll("#assess .radio").forEach(function(r){ r.classList.toggle("sel", r.querySelector("input").checked); });
+    if(assess>0){ capTotal += assess; realTotal += assess; bd.push(["結構安全性能評估", assess]); }
+
+    // 修繕項目
+    var hasElevator=false, hasFacade=false;
+    worksBox.querySelectorAll(".item").forEach(function(it){
+      var cb = it.querySelector(".wk");
+      var realSpan = it.querySelector(".real");
+      if(realSpan) realSpan.textContent = "";
+      if(!cb.checked) return;
+      selCount++;
+      var id = it.dataset.id;
+      var w = cfg.works.filter(function(x){return x.id===id;})[0];
+      var cap;
+      if(w.tiered){ cap = parseFloat(it.querySelector(".tier").value); }
+      else { cap = w.cap; }
+      if(id==="elevator") hasElevator=true;
+      if(id==="facade") hasFacade=true;
+      capTotal += cap;
+      // 實際（填工程費則 min(費×65%, cap)）
+      var cost = parseFloat(it.querySelector(".cost").value);
+      var real = cap;
+      if(!isNaN(cost) && cost>0){
+        anyCost = true;
+        real = Math.min(Math.round(cost*RATE*10)/10, cap);
+        if(realSpan) realSpan.textContent = "實際約 "+real+" 萬";
+      }
+      realTotal += real;
+      bd.push([w.nm.replace(/（.*?）/g,""), cap]);
+    });
+
+    // 解鎖室內
+    var wrap = document.getElementById("indoorWrap");
+    var unlocked = selCount >= cfg.unlock;
+    wrap.classList.toggle("locked", !unlocked);
+    document.getElementById("lockmsg").textContent =
+      "🔒 請先選 ≧ "+cfg.unlock+" 項"+(btype()==="apartment"?"共用部分":"室外修繕")+"，才能加選室內修繕";
+
+    // 室內
+    var indoor = 0;
+    if(unlocked){
+      var nH = parseInt(document.getElementById("normalHouse").value)||0;
+      var wH = parseInt(document.getElementById("weakHouse").value)||0;
+      indoor = nH*20 + wH*30;
+      if(indoor>0){ capTotal+=indoor; realTotal+=indoor; bd.push(["室內專有（"+(nH+wH)+" 戶）", indoor]); }
+    }
+
+    // 整合作業／顧問費（公寓）
+    if(cfg.advisory && selCount>0){
+      var adv = 1 + (hasElevator?5:0) + (hasFacade?5:0);
+      adv = Math.min(adv,11);
+      capTotal += adv; realTotal += adv;
+      bd.push(["整合作業／顧問費", adv]);
+    }
+
+    // 輸出
+    document.getElementById("totalNum").innerHTML = fmt(capTotal)+' <small>萬</small>';
+    document.getElementById("totalNote").textContent =
+      capTotal>0 ? ("約等於新臺幣 "+fmt(capTotal*10000)+" 元（上限）") : "勾選項目後自動試算";
+    var realLine = document.getElementById("realLine");
+    if(anyCost){ realLine.style.display="block"; document.getElementById("realNum").textContent = fmt(Math.round(realTotal*10)/10); }
+    else { realLine.style.display="none"; }
+
+    var list = document.getElementById("bdList");
+    if(bd.length===0){ list.innerHTML = '<div class="bd-empty">尚未選擇任何項目</div>'; }
+    else {
+      list.innerHTML = bd.map(function(r){ return '<div class="bd-row"><span>'+r[0]+'</span><span class="v">'+fmt(r[1])+' 萬</span></div>'; }).join("")
+        + '<div class="bd-row" style="border-top:2px solid var(--line);margin-top:4px;padding-top:8px"><span style="font-weight:800;color:var(--brand)">合計上限</span><span class="v" style="font-size:16px">'+fmt(capTotal)+' 萬</span></div>';
+    }
+  }
+
+  document.querySelectorAll('input[name=btype]').forEach(function(r){ r.addEventListener("change", renderWorks); });
+  document.querySelectorAll('input[name=assess]').forEach(function(r){ r.addEventListener("change", recalc); });
+  document.getElementById("normalHouse").addEventListener("input", recalc);
+  document.getElementById("weakHouse").addEventListener("input", recalc);
+
+  renderWorks();
+})();
+</script>
+<script>
+(function(){
+  // ============================================================
+  //  Firebase 設定 — 請貼上你的專案設定值（見下方設定說明）
+  // ============================================================
+  var firebaseConfig = {
+    apiKey: "AIzaSyC8Xvk1GrH7mSF1abUK9WwgTwvfsCF56dk",
+    authDomain: "winning-laojai-calculator.firebaseapp.com",
+    projectId: "winning-laojai-calculator",
+    storageBucket: "winning-laojai-calculator.firebasestorage.app",
+    messagingSenderId: "992490525733",
+    appId: "1:992490525733:web:5e0e862feea36c06cc1bcc"
+  };
+  // ============================================================
+
+  var gate=document.getElementById('authGate'), app=document.getElementById('app'),
+      logoutBtn=document.getElementById('logoutBtn'), loginBtn=document.getElementById('loginBtn'),
+      errEl=document.getElementById('authErr'), setupMsg=document.getElementById('setupMsg');
+
+  // 尚未設定 → 顯示設定提示、停用登入
+  if(firebaseConfig.apiKey.indexOf('__PASTE')===0){
+    setupMsg.style.display='block';
+    loginBtn.disabled=true;
+    return;
+  }
+
+  firebase.initializeApp(firebaseConfig);
+  var auth = firebase.auth();
+  try{ auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); }catch(e){}
+
+  auth.onAuthStateChanged(function(user){
+    if(user){ gate.style.display='none'; app.style.display='block'; logoutBtn.style.display='block'; }
+    else { gate.style.display='flex'; app.style.display='none'; logoutBtn.style.display='none'; }
+  });
+
+  function doLogin(){
+    var email=(document.getElementById('authEmail').value||'').trim();
+    var pw=document.getElementById('authPw').value||'';
+    errEl.textContent='';
+    if(!email||!pw){ errEl.textContent='請輸入電子郵件與密碼'; return; }
+    loginBtn.disabled=true; loginBtn.textContent='登入中…';
+    auth.signInWithEmailAndPassword(email,pw).catch(function(e){
+      var m={'auth/invalid-email':'電子郵件格式不正確','auth/user-not-found':'查無此帳號','auth/wrong-password':'密碼錯誤','auth/invalid-credential':'帳號或密碼錯誤','auth/too-many-requests':'嘗試次數過多，請稍後再試','auth/network-request-failed':'網路連線失敗'};
+      errEl.textContent = m[e.code] || ('登入失敗：'+e.code);
+    }).finally(function(){ loginBtn.disabled=false; loginBtn.textContent='登　入'; });
+  }
+  loginBtn.addEventListener('click', doLogin);
+  document.getElementById('authEmail').addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
+  document.getElementById('authPw').addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
+  logoutBtn.addEventListener('click', function(){ auth.signOut(); });
+})();
+</script>
+
+<script>
+/* ===== 分頁切換 + 健檢表 iframe 自動高度 ===== */
+(function(){
+  function sizeFrame(fr){
+    try{
+      var d=fr.contentWindow.document;
+      var h=Math.max(d.documentElement.scrollHeight, d.body.scrollHeight);
+      if(h>200){ fr.style.height=h+'px'; }
+    }catch(e){ /* file:// 跨來源無法量測時，沿用 CSS min-height 並可內部捲動 */ }
+  }
+  function activate(name){
+    document.querySelectorAll('.tabbtn').forEach(function(b){
+      b.classList.toggle('active', b.getAttribute('data-tab')===name);
+    });
+    document.querySelectorAll('.tabpanel').forEach(function(p){
+      p.classList.toggle('active', p.id==='panel-'+name);
+    });
+    var panel=document.getElementById('panel-'+name);
+    var fr=panel ? panel.querySelector('iframe[data-src]') : null;
+    if(fr && !fr.getAttribute('src')){
+      fr.addEventListener('load', function(){ sizeFrame(fr); });
+      fr.setAttribute('src', fr.getAttribute('data-src'));
+    } else if(fr){
+      sizeFrame(fr);
+    }
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('.tabbtn').forEach(function(b){
+    b.addEventListener('click', function(){ activate(b.getAttribute('data-tab')); });
+  });
+  window.addEventListener('resize', function(){
+    var p=document.querySelector('.tabpanel.active');
+    var fr=p ? p.querySelector('iframe[data-src]') : null;
+    if(fr && fr.getAttribute('src')) sizeFrame(fr);
+  });
+
+  /* ===== 列印 / 匯出 ===== */
+  function exportTab(name){
+    if(name==='calc'){
+      window.print();   // @media print 隱藏分頁列/登出/工具列 → 只輸出補助試算內容
+      return;
+    }
+    var fr=document.querySelector('#panel-'+name+' iframe');
+    if(!fr) return;
+    function doPrint(){
+      try{ fr.contentWindow.focus(); fr.contentWindow.print(); }
+      catch(e){ window.open(fr.getAttribute('src')||fr.getAttribute('data-src'),'_blank'); }
+    }
+    if(fr.getAttribute('data-src') && !fr.getAttribute('src')){
+      fr.addEventListener('load', doPrint, {once:true});
+      fr.setAttribute('src', fr.getAttribute('data-src'));
+    } else {
+      doPrint();
+    }
+  }
+  document.querySelectorAll('.exp-btn').forEach(function(b){
+    b.addEventListener('click', function(){ exportTab(b.getAttribute('data-print')); });
+  });
+})();
+</script>
+</body>
+</html>

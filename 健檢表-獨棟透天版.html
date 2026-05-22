@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>2026 老宅延壽補助申請健檢表 · 獨棟透天版</title>
+<style>
+  :root{
+    --ink:#33271a;
+    --brand:#46301e;
+    --brand2:#6b4a30;
+    --accent:#b07a32;
+    --bg:#efe6d4;
+    --card:#fffdf8;
+    --line:#d8c9ad;
+    --zebra:#f6efe0;
+    --soft:#f0e7d4;
+    --ok:#3f7d52;
+    --warn:#bb5a2a;
+    --font:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{background:var(--bg);font-family:var(--font);color:var(--ink);line-height:1.5;font-size:12px}
+  .sheet{width:794px;margin:0 auto;background:var(--card);padding:30px 36px 26px}
+
+  .doc-head{border-bottom:3px solid var(--brand);padding-bottom:16px;margin-bottom:18px;position:relative}
+  .dh-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .dh-tag{background:var(--brand);color:#fff;font-weight:800;font-size:13px;padding:4px 14px;border-radius:20px;letter-spacing:.05em}
+  .dh-year{font-family:Georgia,serif;font-weight:700;font-size:15px;color:var(--accent);letter-spacing:.08em}
+  .dh-line{flex:1;height:1px;background:var(--line)}
+  h1{font-size:30px;font-weight:900;color:var(--brand);letter-spacing:.02em;line-height:1.12}
+  .dh-sub{font-size:13px;color:var(--brand2);font-weight:600;margin-top:5px}
+  .dh-note{list-style:none;margin-top:12px;background:var(--soft);border-left:4px solid var(--accent);
+           border-radius:0 8px 8px 0;padding:10px 16px}
+  .dh-note li{font-size:11.5px;color:#5a4530;padding:1.5px 0;position:relative;padding-left:14px}
+  .dh-note li::before{content:"•";position:absolute;left:0;color:var(--accent);font-weight:900}
+  .dh-note li b{color:var(--brand)}
+
+  .block{margin-bottom:14px;break-inside:avoid}
+  .bh{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,var(--brand) 0%,var(--brand2) 100%);
+      color:#fff;padding:7px 14px;border-radius:8px 8px 0 0}
+  .bn{font-family:Georgia,serif;font-weight:700;font-size:14px;background:rgba(255,255,255,.18);
+      min-width:34px;text-align:center;padding:2px 8px;border-radius:5px;letter-spacing:.04em}
+  .bt{font-size:15px;font-weight:800;letter-spacing:.03em}
+  .bhint{margin-left:auto;font-size:11px;font-weight:500;opacity:.85}
+
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  .chk th,.chk td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+  .chk thead th{background:var(--soft);color:var(--brand);font-weight:800;font-size:11.5px;text-align:center}
+  .chk tbody tr:nth-child(even){background:var(--zebra)}
+  .chk .no{text-align:center;font-family:Georgia,serif;font-weight:700;color:var(--brand2);width:34px}
+  .chk .res{white-space:nowrap;width:128px;text-align:center;font-weight:600}
+  .chk .rm{color:#7a6748;font-size:11px;width:170px}
+  .chk td.item{font-weight:600}
+
+  .cb{display:inline-block;width:12px;height:12px;border:1.4px solid var(--brand2);border-radius:2.5px;
+      vertical-align:-2px;margin-right:4px;background:#fff}
+  .cb.on{background:var(--brand);border-color:var(--brand);position:relative}
+  .cb.on::after{content:"✓";position:absolute;left:1px;top:-3px;color:#fff;font-size:11px;font-weight:900}
+  .opt{display:inline-block;margin-right:12px;white-space:nowrap}
+
+  .info{border:1px solid var(--line)}
+  .info th{background:var(--soft);color:var(--brand);font-weight:700;text-align:left;padding:7px 12px;
+           width:120px;border:1px solid var(--line);font-size:12px}
+  .info td{border:1px solid var(--line);padding:7px 12px;min-width:120px}
+
+  .fund th,.fund td{border:1px solid var(--line);padding:6px 10px;vertical-align:middle}
+  .fund thead th{background:var(--soft);color:var(--brand);font-weight:800;font-size:11.5px;text-align:center}
+  .fund tbody tr:nth-child(even){background:var(--zebra)}
+  .fund .no{text-align:center;font-family:Georgia,serif;font-weight:700;color:var(--brand2);width:34px}
+  .fund .need{text-align:center;width:54px}
+  .fund .est{width:150px}
+  .fund .cap{text-align:right;width:140px;font-weight:700;color:var(--brand);white-space:nowrap}
+  .fund .item{font-weight:600}
+  .fund .grp td{background:var(--brand2);color:#fff;font-weight:700;font-size:11px;letter-spacing:.06em;padding:4px 12px;text-align:left}
+  .fund tfoot td{background:var(--soft);font-weight:700;color:var(--brand);text-align:right;padding:6px 10px;border:1px solid var(--line)}
+
+  .concl{border:1px solid var(--line)}
+  .concl th{background:var(--soft);color:var(--brand);font-weight:700;text-align:left;padding:8px 12px;
+            width:140px;border:1px solid var(--line);vertical-align:top}
+  .concl td{border:1px solid var(--line);padding:8px 12px}
+  .concl .blank{min-height:42px}
+
+  .note-sec{background:var(--soft);border:1px dashed var(--accent);border-radius:8px;padding:9px 14px;margin-top:6px;font-size:11px;color:#6a5234}
+  .note-sec b{color:var(--brand)}
+  .doc-foot{margin-top:14px;border-top:1px solid var(--line);padding-top:10px;display:flex;justify-content:space-between;
+            align-items:center;font-size:10.5px;color:#8a7558}
+  .doc-foot .brand{font-weight:700;color:var(--brand2)}
+
+  @page{size:A4;margin:11mm 10mm 12mm}
+  @media print{html,body{background:#fff}.sheet{width:auto;margin:0;padding:0}}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="doc-head">
+    <div class="dh-top"><span class="dh-tag">獨棟透天版</span><span class="dh-year">2026</span><span class="dh-line"></span></div>
+    <h1>老宅延壽補助　申請前健檢表</h1>
+    <div class="dh-sub">機能復新計畫　·　申請前自評 / 補件盤點 / 現勘訪談使用</div>
+    <ul class="dh-note">
+      <li><b>適用方向：</b>屋齡 30 年以上、6 樓以下透天住宅之老宅延壽申請前健檢。</li>
+      <li><b>重點先看：</b>全棟住宅使用、自然人所有權、結構安全評估、是否搭配室外修繕項目。</li>
+      <li><b>注意：</b>實際申請條件與受理方式，仍以地方政府公告及正式申請文件為準。</li>
+    </ul>
+  </header>
+
+  <!-- 基本資訊 -->
+  <section class="block">
+    <div class="bh"><span class="bn">●</span><span class="bt">基本案件資訊</span></div>
+    <table class="info">
+      <tr><th>案件名稱</th><td></td><th>填表日期</th><td></td></tr>
+      <tr><th>建物地址</th><td colspan="3"></td></tr>
+      <tr><th>聯絡人</th><td></td><th>聯絡電話</th><td></td></tr>
+      <tr><th>屋齡（年）</th><td></td><th>樓層數</th><td></td></tr>
+      <tr><th>建物類型</th><td colspan="3"><span class="cb on"></span>獨棟透天</td></tr>
+    </table>
+  </section>
+
+  <!-- B-1 -->
+  <section class="block">
+    <div class="bh"><span class="bn">B-1</span><span class="bt">基本資格健檢</span><span class="bhint">原則應全部「是」</span></div>
+    <table class="chk">
+      <thead><tr><th style="width:34px">項次</th><th>檢核內容</th><th style="width:128px">結果</th><th style="width:170px">備註</th></tr></thead>
+      <tbody>
+        <tr><td class="no">1</td><td class="item">建物類型為 6 樓以下透天住宅</td><td class="res"><span class="opt"><span class="cb"></span>是</span><span class="opt"><span class="cb"></span>否</span></td><td class="rm"></td></tr>
+        <tr><td class="no">2</td><td class="item">屋齡 30 年以上</td><td class="res"><span class="opt"><span class="cb"></span>是</span><span class="opt"><span class="cb"></span>否</span></td><td class="rm">以使用執照竣工日起算</td></tr>
+        <tr><td class="no">3</td><td class="item">以「棟」為單位申請</td><td class="res"><span class="opt"><span class="cb"></span>是</span><span class="opt"><span class="cb"></span>否</span></td><td class="rm"></td></tr>
+        <tr><td class="no">4</td><td class="item">申請人為建築物所有權人</td><td class="res"><span class="opt"><span class="cb"></span>是</span><span class="opt"><span class="cb"></span>否</span></td><td class="rm">共有者須全體同意推派</td></tr>
+        <tr><td class="no">5</td><td class="item">已完成結構安全初評或詳評</td><td class="res"><span class="opt"><span class="cb"></span>是</span><span class="opt"><span class="cb"></span>否</span></td><td class="rm">須由內政部評定之 32 家共同供應契約機構辦理</td></tr>
+        <tr><td class="no">6</td><td class="item">全棟均作住宅使用</td><td class="res"><span class="opt"><span class="cb"></span>是</span><span class="opt"><span class="cb"></span>否</span></td><td class="rm"></td></tr>
+        <tr><td class="no">7</td><td class="item">所有權人為自然人</td><td class="res"><span class="opt"><span class="cb"></span>是</span><span class="opt"><span class="cb"></span>否</span></td><td class="rm"></td></tr>
+        <tr><td class="no">8</td><td class="item">主要建材原則採國產品牌</td><td class="res"><span class="opt"><span class="cb"></span>是</span><span class="opt"><span class="cb"></span>否</span></td><td class="rm">如有例外須另洽</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- B-2 -->
+  <section class="block">
+    <div class="bh"><span class="bn">B-2</span><span class="bt">不得申請情形排除</span><span class="bhint">原則應全部「無」</span></div>
+    <table class="chk">
+      <thead><tr><th style="width:34px">項次</th><th>排除條件</th><th style="width:128px">結果</th><th style="width:170px">備註</th></tr></thead>
+      <tbody>
+        <tr><td class="no">1</td><td class="item">已申請建造／拆除執照或經認定應拆除重建</td><td class="res"><span class="opt"><span class="cb"></span>無</span><span class="opt"><span class="cb"></span>有</span></td><td class="rm"></td></tr>
+        <tr><td class="no">2</td><td class="item">已報核都市更新或危老重建計畫</td><td class="res"><span class="opt"><span class="cb"></span>無</span><span class="opt"><span class="cb"></span>有</span></td><td class="rm"></td></tr>
+        <tr><td class="no">3</td><td class="item">同一補助項目已獲其他法令或計畫補助</td><td class="res"><span class="opt"><span class="cb"></span>無</span><span class="opt"><span class="cb"></span>有</span></td><td class="rm"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- B-3 -->
+  <section class="block">
+    <div class="bh"><span class="bn">B-3</span><span class="bt">可申請項目盤點</span><span class="bhint">室外擇 ≧ 1 項，才能加選室內</span></div>
+    <table class="fund">
+      <thead><tr><th style="width:34px">項次</th><th>補助項目</th><th style="width:54px">需求</th><th style="width:150px">預估經費</th><th style="width:140px">補助上限</th></tr></thead>
+      <tbody>
+        <tr class="grp"><td colspan="5">室外修繕（必選 ≧ 1 項）</td></tr>
+        <tr><td class="no">1</td><td class="item">建築物立面修繕（1–2 樓）</td><td class="need"><span class="cb"></span></td><td class="est"></td><td class="cap">100 萬／棟</td></tr>
+        <tr><td class="no">2</td><td class="item">建築物立面修繕（3–4 樓）</td><td class="need"><span class="cb"></span></td><td class="est"></td><td class="cap">200 萬／棟</td></tr>
+        <tr><td class="no">3</td><td class="item">建築物立面修繕（5–6 樓）</td><td class="need"><span class="cb"></span></td><td class="est"></td><td class="cap">300 萬／棟</td></tr>
+        <tr><td class="no">4</td><td class="item">屋頂防水及隔熱</td><td class="need"><span class="cb"></span></td><td class="est"></td><td class="cap">20 萬／棟</td></tr>
+        <tr><td class="no">5</td><td class="item">外掛式空調及外部管線安全改善</td><td class="need"><span class="cb"></span></td><td class="est"></td><td class="cap">5 萬／棟</td></tr>
+        <tr><td class="no">6</td><td class="item">增設或改善室外無障礙設施</td><td class="need"><span class="cb"></span></td><td class="est"></td><td class="cap">5 萬／棟</td></tr>
+        <tr class="grp"><td colspan="5">室內修繕（須先選 ≧ 1 項室外）</td></tr>
+        <tr><td class="no">7</td><td class="item">室內安全及無障礙改善</td><td class="need"><span class="cb"></span></td><td class="est"></td><td class="cap">20 萬／戶</td></tr>
+        <tr><td class="no">8</td><td class="item">室內管線修繕更新</td><td class="need"><span class="cb"></span></td><td class="est"></td><td class="cap">與室內項目併看</td></tr>
+        <tr><td class="no">9</td><td class="item">配合室內項目之必要室內裝修</td><td class="need"><span class="cb"></span></td><td class="est"></td><td class="cap">與室內項目併看</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="5">室外立面採階梯式（1–2 樓 100 / 3–4 樓 200 / 5–6 樓 300 萬）· 立面補助單價 ≤ 3,500 元/m² · 各項以實際工程費 65% 為限 · 高齡弱勢室內可加碼至 30 萬／戶</td></tr></tfoot>
+    </table>
+  </section>
+
+  <!-- B-4 -->
+  <section class="block">
+    <div class="bh"><span class="bn">B-4</span><span class="bt">室內補助加碼條件</span><span class="bhint">符合可由 20 萬提高至 30 萬／戶</span></div>
+    <table class="chk">
+      <thead><tr><th style="width:34px">項次</th><th>條件</th><th style="width:220px">結果</th><th style="width:120px">備註</th></tr></thead>
+      <tbody>
+        <tr><td class="no">1</td><td class="item">戶籍成員年滿 65 歲以上</td><td class="res"><span class="opt"><span class="cb"></span>是</span><span class="opt"><span class="cb"></span>否</span></td><td class="rm"></td></tr>
+        <tr><td class="no">2</td><td class="item">具低收入戶或中低收入戶資格</td><td class="res"><span class="opt"><span class="cb"></span>是</span><span class="opt"><span class="cb"></span>否</span></td><td class="rm"></td></tr>
+        <tr><td class="no">3</td><td class="item">長照需要等級第 2 級以上且符合居家無障礙補助對象</td><td class="res"><span class="opt"><span class="cb"></span>是</span><span class="opt"><span class="cb"></span>否</span></td><td class="rm"></td></tr>
+        <tr><td class="no">4</td><td class="item">是否可提高室內補助上限</td><td class="res" style="text-align:left;width:auto"><span class="opt"><span class="cb"></span>可提高至 30 萬</span><span class="opt"><span class="cb"></span>維持 20 萬</span></td><td class="rm"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- B-5 -->
+  <section class="block">
+    <div class="bh"><span class="bn">B-5</span><span class="bt">應備文件盤點</span><span class="bhint">送件前逐項確認</span></div>
+    <table class="chk">
+      <thead><tr><th style="width:34px">項次</th><th>文件名稱</th><th style="width:150px">備齊狀態</th></tr></thead>
+      <tbody>
+        <tr><td class="no">1</td><td class="item">申請補助計畫書</td><td class="res"><span class="opt"><span class="cb"></span>已備</span><span class="opt"><span class="cb"></span>未備</span></td></tr>
+        <tr><td class="no">2</td><td class="item">申請人身分證明文件</td><td class="res"><span class="opt"><span class="cb"></span>已備</span><span class="opt"><span class="cb"></span>未備</span></td></tr>
+        <tr><td class="no">3</td><td class="item">近 3 個月建物登記謄本</td><td class="res"><span class="opt"><span class="cb"></span>已備</span><span class="opt"><span class="cb"></span>未備</span></td></tr>
+        <tr><td class="no">4</td><td class="item">使用執照或合法建築證明</td><td class="res"><span class="opt"><span class="cb"></span>已備</span><span class="opt"><span class="cb"></span>未備</span></td></tr>
+        <tr><td class="no">5</td><td class="item">結構安全性能評估報告</td><td class="res"><span class="opt"><span class="cb"></span>已備</span><span class="opt"><span class="cb"></span>未備</span></td></tr>
+        <tr><td class="no">6</td><td class="item">施工廠商契約書或報價單</td><td class="res"><span class="opt"><span class="cb"></span>已備</span><span class="opt"><span class="cb"></span>未備</span></td></tr>
+        <tr><td class="no">7</td><td class="item">戶口名簿／全戶戶籍謄本</td><td class="res"><span class="opt"><span class="cb"></span>已備</span><span class="opt"><span class="cb"></span>未備</span></td></tr>
+        <tr><td class="no">8</td><td class="item">低收／中低收／長照等資格證明</td><td class="res"><span class="opt"><span class="cb"></span>已備</span><span class="opt"><span class="cb"></span>未備</span></td></tr>
+        <tr><td class="no">9</td><td class="item">未重複受補助切結書及地方要求文件</td><td class="res"><span class="opt"><span class="cb"></span>已備</span><span class="opt"><span class="cb"></span>未備</span></td></tr>
+        <tr><td class="no">10</td><td class="item">建築物外觀及需修繕現況表</td><td class="res"><span class="opt"><span class="cb"></span>已備</span><span class="opt"><span class="cb"></span>未備</span></td></tr>
+        <tr><td class="no">11</td><td class="item">選定代表人委託書</td><td class="res"><span class="opt"><span class="cb"></span>已備</span><span class="opt"><span class="cb"></span>未備</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- B-6 -->
+  <section class="block">
+    <div class="bh"><span class="bn">B-6</span><span class="bt">初判結果</span><span class="bhint">承辦／顧問填寫</span></div>
+    <table class="concl">
+      <tr><th>是否符合申請<br>基本門檻</th><td><span class="opt"><span class="cb"></span>可申請</span><span class="opt"><span class="cb"></span>待補件</span><span class="opt"><span class="cb"></span>不建議申請</span></td></tr>
+      <tr><th>最大卡點</th><td><span class="opt"><span class="cb"></span>全棟住宅使用</span><span class="opt"><span class="cb"></span>自然人所有權</span><span class="opt"><span class="cb"></span>共有整合</span><span class="opt"><span class="cb"></span>結構評估</span><span class="opt"><span class="cb"></span>重複補助</span></td></tr>
+      <tr><th>建議優先處理</th><td><span class="opt"><span class="cb"></span>先做結構初評</span><span class="opt"><span class="cb"></span>確認謄本與用途</span><span class="opt"><span class="cb"></span>先抓 1 項室外工程</span><span class="opt"><span class="cb"></span>整理戶籍與資格證明</span><span class="opt"><span class="cb"></span>詢問地方窗口</span></td></tr>
+      <tr><th>承辦備註</th><td><div class="blank"></div></td></tr>
+    </table>
+  </section>
+
+  <div class="note-sec"><b>備註：</b>若申請室內補助，原則上應先申請或併同申請至少 1 項室外修繕項目。本文件供申請前健檢與補件盤點使用，實際受理仍以地方政府公告為準。</div>
+
+  <footer class="doc-foot">
+    <span>老宅延壽機能復新計畫 · 獨棟透天版健檢表</span>
+    <span class="brand">中央諮詢專線 02-7701-9919　·　內政部都市更新入口網「老宅延壽專區」</span>
+  </footer>
+
+</div>
+</body>
+</html>
