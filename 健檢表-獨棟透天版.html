@@ -130,9 +130,15 @@
     }
     .pf-disclaimer{ font-size:9pt; line-height:1.6; color:#46301e; text-align:justify }
     .pf-disclaimer b.warn{ color:#8b3a1d; font-weight:800 }
-    .pf-info{ font-size:8pt; line-height:1.5; color:#6b4a30; margin-top:7pt; text-align:center;
-              border-top:1pt dotted #c4b290; padding-top:6pt; letter-spacing:.03em }
+    .pf-bottom{ display:flex; gap:14pt; align-items:center; margin-top:7pt;
+                border-top:1pt dotted #c4b290; padding-top:8pt }
+    .pf-info{ flex:1 1 auto; font-size:8pt; line-height:1.6; color:#6b4a30;
+              text-align:left; letter-spacing:.03em }
     .pf-info b{ color:#46301e }
+    .pf-qr{ flex:0 0 auto; text-align:center }
+    .pf-qr img{ width:62pt; height:62pt; display:block; border:0.5pt solid #c4b290; padding:2pt; border-radius:2pt }
+    .pf-qr-cap{ font-size:7pt; margin-top:3pt; color:#6b4a30; line-height:1.35; letter-spacing:.04em }
+    .pf-qr-cap b{ color:#46301e; font-weight:700 }
     .editable:empty:before{ content:"" !important }
   }
 </style>
@@ -290,8 +296,16 @@
   <div class="pf-disclaimer">
     <b class="warn">⚠ 使用聲明　FOR REFERENCE ONLY</b>　本文件僅供「申請前自評與補件盤點」之諮詢輔助使用，<b>不構成正式申請文件</b>。實際申請條件、補助項目、額度、名額與受理方式，仍以<b>內政部國土管理署及各直轄市、縣（市）政府正式公告</b>為準；補助辦法與政策內容可能隨主管機關調整，<b>勝利室內裝修工作室不保證申請結果或補助核准</b>，亦不負法律連帶責任。實際申請流程請洽地方政府窗口或專業申請輔導機構。
   </div>
-  <div class="pf-info">
-    <b>勝利室內裝修工作室</b>　·　謝佑祥　設計總監（土木技師）　|　電話　<b>0909-767886</b>　|　LINE　<b>@winning</b>　|　www.winning0602.com　|　中央諮詢專線　<b>02-7701-9919</b>　·　內政部都市更新入口網「老宅延壽專區」
+  <div class="pf-bottom">
+    <div class="pf-info">
+      <b>勝利室內裝修工作室</b>　·　謝佑祥　設計總監（土木技師）<br>
+      電話　<b>0909-767886</b>　|　LINE　<b>@winning</b>　|　www.winning0602.com<br>
+      中央諮詢專線　<b>02-7701-9919</b>　·　內政部都市更新入口網「老宅延壽專區」
+    </div>
+    <div class="pf-qr">
+      <img src="line-qr.png" alt="LINE 官方帳號 @winning QR Code">
+      <div class="pf-qr-cap">掃碼加 LINE<br><b>@winning</b></div>
+    </div>
   </div>
 </div>
 <footer class="doc-foot">
