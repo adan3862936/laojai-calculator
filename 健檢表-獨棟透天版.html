@@ -100,9 +100,64 @@
   .concl .blank.editable{min-height:42px}
   .editable:not(:focus):empty:before{content:attr(data-ph);color:#c4b290;font-weight:400;font-size:11.5px}
   @media print{ .editable{background:transparent !important;box-shadow:none !important} .editable:empty:before{content:'' !important} }
+  /* ===== 列印用：公司 LOGO 標頭 + 法律使用聲明（靜態區塊）===== */
+  .print-header, .print-footer{ display:none }
+  @media print{
+    @page{ size:A4; margin:12mm 14mm }
+    body{ background:#fff !important }
+    .print-header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:6pt 0 8pt; margin-bottom:8pt;
+      border-bottom:1.5pt solid #46301e;
+      font-family:var(--font); color:#46301e;
+      page-break-after:avoid; break-after:avoid;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    }
+    .ph-logo{ display:flex; align-items:center; gap:10pt }
+    .ph-logo svg{ width:34pt; height:34pt; flex:0 0 auto }
+    .ph-co{ font-size:13pt; font-weight:800; line-height:1.1; color:#46301e; letter-spacing:.01em }
+    .ph-sub{ font-size:9pt; color:#6b4a30; margin-top:3pt; letter-spacing:.06em }
+    .ph-right{ font-size:9pt; color:#6b4a30; line-height:1.55; text-align:right }
+    .ph-right b{ color:#46301e; font-weight:700 }
+    .ph-right .sep{ opacity:.55; margin:0 6pt }
+    .print-footer{
+      display:block;
+      margin-top:14pt; padding:10pt 12pt;
+      border:1.2pt solid #46301e; border-radius:4pt;
+      font-family:var(--font); color:#46301e;
+      page-break-inside:avoid; break-inside:avoid;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    }
+    .pf-disclaimer{ font-size:9pt; line-height:1.6; color:#46301e; text-align:justify }
+    .pf-disclaimer b.warn{ color:#8b3a1d; font-weight:800 }
+    .pf-info{ font-size:8pt; line-height:1.5; color:#6b4a30; margin-top:7pt; text-align:center;
+              border-top:1pt dotted #c4b290; padding-top:6pt; letter-spacing:.03em }
+    .pf-info b{ color:#46301e }
+    .editable:empty:before{ content:"" !important }
+  }
 </style>
 </head>
 <body>
+<!-- 列印用標頭：勝利室內裝修 LOGO + 健檢表類別 -->
+<div class="print-header" aria-hidden="true">
+  <div class="ph-logo">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32 7 L6 29 L12 29 L12 55 L52 55 L52 29 L58 29 Z" fill="none" stroke="#46301e" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M24 55 L24 38 L40 38 L40 55" fill="none" stroke="#46301e" stroke-width="3.2" stroke-linejoin="round"/>
+      <circle cx="37" cy="46.5" r="1.6" fill="#46301e"/>
+      <path d="M19 24 L19 17 L26 17" fill="none" stroke="#46301e" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="ph-co">勝利室內裝修工作室</div>
+      <div class="ph-sub">老屋延壽申請前健檢表　·　獨棟透天版</div>
+    </div>
+  </div>
+  <div class="ph-right">
+    <div><b>設計總監</b>　謝佑祥<span class="sep">|</span>土木技師</div>
+    <div>LINE　<b>@winning</b><span class="sep">|</span>www.winning0602.com</div>
+  </div>
+</div>
+
 <div class="sheet">
 
   <header class="doc-head">
@@ -229,7 +284,16 @@
 
   <div class="note-sec"><b>備註：</b>若申請室內補助，原則上應先申請或併同申請至少 1 項室外修繕項目。本文件供申請前健檢與補件盤點使用，實際受理仍以地方政府公告為準。</div>
 
-  <footer class="doc-foot">
+  <!-- 列印用頁尾：法律使用聲明（靜態區塊） -->
+<div class="print-footer" aria-hidden="true">
+  <div class="pf-disclaimer">
+    <b class="warn">⚠ 使用聲明　FOR REFERENCE ONLY</b>　本文件僅供「申請前自評與補件盤點」之諮詢輔助使用，<b>不構成正式申請文件</b>。實際申請條件、補助項目、額度、名額與受理方式，仍以<b>內政部國土管理署及各直轄市、縣（市）政府正式公告</b>為準；補助辦法與政策內容可能隨主管機關調整，<b>勝利室內裝修工作室不保證申請結果或補助核准</b>，亦不負法律連帶責任。實際申請流程請洽地方政府窗口或專業申請輔導機構。
+  </div>
+  <div class="pf-info">
+    <b>勝利室內裝修工作室</b>　·　謝佑祥　設計總監（土木技師）　|　LINE　<b>@winning</b>　|　www.winning0602.com　|　中央諮詢專線　<b>02-7701-9919</b>　·　內政部都市更新入口網「老宅延壽專區」
+  </div>
+</div>
+<footer class="doc-foot">
     <span>老宅延壽機能復新計畫 · 獨棟透天版健檢表</span>
     <span class="brand">中央諮詢專線 02-7701-9919　·　內政部都市更新入口網「老宅延壽專區」</span>
   </footer>
